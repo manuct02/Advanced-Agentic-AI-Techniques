@@ -260,7 +260,16 @@ store= OpenAiMemoryStore()
   - Encuentra la memoria guardadad de la interacción previa 
   - Contesta como debe: *"prefieres el modo nocturno"*
 
+## **3. Designing Multi-Agent Architecture**
 
+El Diseño Arquitectónico Multiagente es la estructura de alto nivel que define cuál es el trabajo de cada agente, con quién necesitan comunicarse y las reglas de interacción para su comunicación. Nuestro modelo mental aquí es el de un **organigrama para tu equipo de IA**. Decidiremos si necesitamos un "gerente" (un **Orquestador**) que delega tareas, o una estructura más colaborativa y "plana" (**Peer-to-Peer**) donde los agentes expertos se comunican directamente. Hacer bien este plano es un paso importante para construir un sistema que no colapse bajo presión.
+
+#### **Términos clave:**
+- **Architecture**: la organización fundamental de un sistema, encarnada en sus componentes, sus relaciones entre sí y con el entorno, y los principios que rigen su diseño y evolución.
+- **Orchestrator Pattern**: una arquitectura centralizada donde un solo agente (el orquestador) gestiona y delega tareas a un equipo de agentes trabajadores.
+- **Peer-to-Peer Pattern**: una arquitectura descentralizada donde los agentes pueden comunicarse y coordinarse directamente entre sí sin un gestor central.
+- **Role Specialization**: el principio de asignar a cada agente un trabajo o responsabilidad específica y bien definida.
+- **Data Flow**: el camino que siguen los datos a través del sistema, moviéndose de un agente a otro.
 
 
 
