@@ -304,3 +304,21 @@ Aquí se explorará cómo gestionar un equipo multiagente. Nuestro modelo mental
 - **Parallel Execution**
 - **Conditional brnaching**
 
+### Comunicación, control de flujo y manejo del estado
+
+#### **Patrones de Comunicación**
+Los agentes se pueden comunicar mediante dos mecanismos: **handsoff** y las **tool calls**. Handsoff implica que un agente pueda transferirle el control a otro, mientras que las tool calls tratan a los agentes como funciones especializadas que reciben inputs específicos y devuelven outputs estructurados.
+
+Los handsoff aportan contexto comprensible pasando el estado completo del sistema, incluendo el historial de conversación entero. Sin embargo, las tool calls habilitan una comunicación más centrada donde sólo se comparte la información relevante se comparte, promoviendo modularidad y reduciendo la sobretarnsferencia de datos.
+
+#### **Manejo del control de flujo**
+
+El control de flujo determina qué agente ejecuta según qué acción en según qué momento y cómo ocurren las transiciones entre ellos. En sistemas orquestados, un agente supervisor orquesta la secuencia, decidiendo cuándo delegar las tasks a los trabajadores especializados y cuándo consolidar los resultados.
+
+Los agentes pueden devolver objetos `Command` que especifican tanto la siguiente destinación como las actualizaciones del estado.
+
+#### **Estrategias del manejo de estado**
+
+La parte más crucial en la toma de decisiones de un sistema de multiagente viene a la hora de determinar cuánta información comparten los agentes con cada uno de los demás. Existen dos enfoques fundamentales:
+- **Full thought process sharing**: los agentes exponen su razonamiento interno completo, incluyendo las tool calls intermedias y los pasos decididos a tomar. Esto aporta un contexto máximo para los demás agentes pero puede llegar a llevar a la creación de objetos crecientes de estado que requieran de estrategias de manejo de memoria más complejas y sofisticadas.
+- **Final Results Only**: los agentes mantienen sus estados internos privados y sólo comparten los outputs finales. Este enfoque se aplica mejor en sistemas complejos y muchos agentes, pero podría llegar a limitar la capacidad de otros agentes a la hora de tomar decisiones informadas.
