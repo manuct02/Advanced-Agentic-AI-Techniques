@@ -608,3 +608,8 @@ workflow_png= graph.get_graph().draw_mermaid_png()
 user_message= HumanMessage(content= "I want a blog post about Kingdom Hearts 2")
 
 result= graph.invoke(input={"query": user_message})
+
+result["publish_status"]
+result["final_markdown"]
+for message in result["messages"]:
+    message.pretty_print()
