@@ -284,7 +284,7 @@ def seo_score(md: str, keywords: List[str])-> Dict[str, Any]:
         {'score': 28, 'title_hits': 1, 'heading_hits': 0, 'body_hits': 1, 'keywords_checked': ['langgraph']}
     """
     import re
-    text= md.lower
+    text= md.lower()
     title= ""
     headings= []
     for line in md.splitlines():
@@ -515,7 +515,7 @@ def writer_node(state: BlogState):
     last_ai_message: AIMessage= messages[-1]
 
     llm_with_structure= llm.with_structured_output(ContentDraft)
-    structured_output: ContentDraft= llm_with_structure.invoke(last_ai_message)
+    structured_output: ContentDraft= llm_with_structure.invoke(last_ai_message.content)
 
     print(f"message: {last_ai_message.content[:20]}...")
     print("Done!\n")

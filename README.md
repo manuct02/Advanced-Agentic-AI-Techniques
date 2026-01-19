@@ -289,3 +289,18 @@ El modelo mental es un **tablero de proyecto compartido o un libro de registro c
 ### **Técnicas Avanzadas de Gestión de Estado**
 
 Necesitamos manejar tanto el **estado a nivel de conversación** como el **estado a nivel del sistema** (lo que debe recordarse para el futuro)
+
+## **5. Orchestrating Agent Activities with LangGraph**
+
+Aquí se explorará cómo gestionar un equipo multiagente. Nuestro modelo mental es el de un director que lidera una orquesta.  Existen tres patrones fundamentales de orquestación: 
+- **Ejecución secuencial** (uno tras otro)
+- **Ejecución Paralela** (todos a la vez)
+- **Ramificación condicional**
+
+### Términos clave:
+- **Orquestación**: la configuración, coordinación y gestión automatizadas de múltiples agentes y sus tareas para ejecutar un flujo de trabajo más amplio.
+- **Workflow**: una secuencia de tareas u operaciones realizadas por uno o más agentes.
+- **Sequential execution**:
+- **Parallel Execution**
+- **Conditional brnaching**
+
