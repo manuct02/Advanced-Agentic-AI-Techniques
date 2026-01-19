@@ -605,6 +605,6 @@ workflow_png= graph.get_graph().draw_mermaid_png()
 #with open("workflow.png", "wb") as f:
     #f.write(workflow_png)
 
-user_message= HumanMessage(content= "I want a blog post about Kingdom Hearts")
+user_message= HumanMessage(content= "I want a blog post about Kingdom Hearts 2")
 
 result= graph.invoke(input={"query": user_message})
