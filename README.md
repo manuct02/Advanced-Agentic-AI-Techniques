@@ -271,6 +271,21 @@ El Diseño Arquitectónico Multiagente es la estructura de alto nivel que define
 - **Role Specialization**: el principio de asignar a cada agente un trabajo o responsabilidad específica y bien definida.
 - **Data Flow**: el camino que siguen los datos a través del sistema, moviéndose de un agente a otro.
 
+## **4. State Management in Multi-Agent Systems**
 
+La memoria a lo largo de una conversación con un agente es lo que llamamos **estado**.
 
+El modelo mental es un **tablero de proyecto compartido o un libro de registro centralizado**. La **gestión de estado** es el proceso de registrar lo que ha suedido, cuál es el estado actual y qué información se ha recopilado, para que cualquier agente del equipo pueda ponerse al día. Es importante diferenciar entre **estado efímero** (memoria a corto plazo para una sola conversación) y **estado persistente** (memoria a largo plazo almacenada en una base de datos). Lo más importante, cubriremos el **manejo de fallos**, que es el conjunto crucial de estrategias para saber qué hacer cuando inevitablemente algo sale mal.
 
+![alt text](image.png)
+
+#### **Términos clave para este módulo**:
+- **Estado**: la información que un sistema almacena y mantiene sobre el estado de un proceso o interacción en un momento dado.
+- **Gestión de estado**: las técnicas y procesos para rastrear, actualizar y preservar el estado dentro de un sistema.
+- **Estado efímero**: estado temporal que existe solo durante la duración de una sesión o conversación (el historial del chat)
+- **Estado persistente**: estado que se guarda en una base de datos o archivo y perdura a través de múltiples sesiones.
+- **Manejo de fallos**: estrategias para gestionar errores en un flujo de trabajo, incluyendo lógica de reintento, planes alternativos y escalamiento con intervención humana.
+
+### **Técnicas Avanzadas de Gestión de Estado**
+
+Necesitamos manejar tanto el **estado a nivel de conversación** como el **estado a nivel del sistema** (lo que debe recordarse para el futuro)
