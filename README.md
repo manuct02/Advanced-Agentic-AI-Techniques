@@ -322,3 +322,22 @@ Los agentes pueden devolver objetos `Command` que especifican tanto la siguiente
 La parte más crucial en la toma de decisiones de un sistema de multiagente viene a la hora de determinar cuánta información comparten los agentes con cada uno de los demás. Existen dos enfoques fundamentales:
 - **Full thought process sharing**: los agentes exponen su razonamiento interno completo, incluyendo las tool calls intermedias y los pasos decididos a tomar. Esto aporta un contexto máximo para los demás agentes pero puede llegar a llevar a la creación de objetos crecientes de estado que requieran de estrategias de manejo de memoria más complejas y sofisticadas.
 - **Final Results Only**: los agentes mantienen sus estados internos privados y sólo comparten los outputs finales. Este enfoque se aplica mejor en sistemas complejos y muchos agentes, pero podría llegar a limitar la capacidad de otros agentes a la hora de tomar decisiones informadas.
+
+## **6. Routing and Data Flow in Agentic Systems**
+
+En muchos workflows el orquestador hace las veces de enrutador, pero en situaciones más dinámicas, necesitamos mecanismos de routing más sofisticados.
+
+### Conceptos clave:
+ - **Routing**: el proceso de dirigir mensajes o tareas al agente o grupo de agentes apropiados dentro de un sistema.
+ - **Content-based routing**: estrategia de routing que dirige un mensaje según su contenido o metadatos (palabras clave, tipo de dato...)
+ - **Round-Robing Routing**: estrategia de routing que distribuye las tareas de manera equitativa entre un grupo de agentes similares, uno tras otro.
+ - **Priority-based Routing**: estrategia de enrutamiento que procesa mensajes según su nivel de prioridad predefinido.
+ - **Data Flow**: se refiere a la gestión de los datos mientras se mueven entre agentes. Esto es distinto del enrutamiento(que decide la ruta) y puede involucrar transformar la estrcutura de los datos, filtrar información irrelevante, o enriquecerla con contexto adicional para asegurar que esté en el formato correcto para el agente receptor.
+
+#### **Gestión del flujo de datos**
+
+A veces, la carga útil de datos dentro de un mensaje no es adecuada para el agente receptor. La gestión del flujo de datos se encarga de transformar los datos mientras se mueven. Esto puede incluir:
+ - mejora (agrega información de provecgo para el agente)
+ - filtrado (elimina datos innecesarios)
+ - reformateo/transformación (cambiar la estructura o tipo de datos)
+
