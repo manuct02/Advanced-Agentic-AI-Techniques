@@ -202,5 +202,139 @@ agent_teams= [create_team(team_name, agent_pool) for team_name, agent_pool in ag
 
 agent_teams_3_png= agent_teams[3].get_graph().draw_mermaid_png()
 
-with open("agent_teams_3.png", "wb") as f:
-    f.write(agent_teams_3_png)
+# ENSAMBLAJE WORKFLOW
+
+class FintechState(MessagesState):
+    """Estado que trackea qué team llamar a continuación"""
+    query: str
+    agent_teams: List[CompiledStateGraph]
+    agent_swarm_map: Dict[str, CompiledStateGraph]
+    team_to_call: str
+    urgency: str = ""  
+    topic: str = "" 
+
+def define_agent_team(state: FintechState):
+    query= state["query"]
+
+    urgency_result= classify_urgency(query)
+    urgency= urgency_result["urgency"]
+
+    topic_result= classify_topic(query)
+    topic= topic_result["topic"]
+
+    if urgency == "urgent":
+        if topic == "credit_card":
+            return {"team_to_call": "credit_card_team", "urgency": urgency, "topic": topic}
+        elif topic == "account":
+            return {"team_to_call": "account_team", "urgency": urgency, "topic": topic}
+        elif topic == "loan":
+            return {"team_to_call": "loan_team", "urgency": urgency, "topic": topic}
+        
+    return {"team_to_call": "general_team", "urgency": urgency, "topic": topic}
+
+def trigger_agent_team(state: FintechState, config: RunnableConfig):
+    query= state["query"]
+    team_to_call= state["team_to_call"]
+    agent_teams: List[CompiledStateGraph]= config["configurable"]["agent_teams"]
+    agent_swarm_map= config["configurable"]["agent_swarm_map"]
+    agent_pool_to_call: List[CompiledStateGraph]= agent_swarm_map[team_to_call]
+
+    for team in agent_teams:
+        print(team.name, team_to_call)
+        if team.name == team_to_call:
+
+            result= team.invoke(
+                input={
+                    "messages": [HumanMessage(content= query)],
+                    "agent_names": [agent.name for agent in agent_pool_to_call]
+                },
+                config= {
+                    "configurable": {
+                        "thread_id":"round_robin"
+                    }
+                }
+            )
+            return {"messages": result["messages"]}
+    
+    raise ValueError("team_to_call is not inside agent_teams")
+
+def create_fintech_workflow():
+    """Crear el workflow completo de forma que:
+    1. Enrute por urgencia + topic a los teams
+    2. Use round-robin en los teams
+    """
+    workflow= StateGraph(FintechState)
+
+    workflow.add_node("define_agent_team", define_agent_team)
+    workflow.add_node("trigger_agent_team", trigger_agent_team)
+
+    workflow.add_edge(START, "define_agent_team")
+    workflow.add_edge("define_agent_team", "trigger_agent_team")
+    workflow.add_edge("trigger_agent_team", END)
+
+    return workflow
+
+fintech_workflow= create_fintech_workflow()
+fintech_graph= fintech_workflow.compile(checkpointer=MemorySaver())
+
+
+fintech_workflow_png= fintech_graph.get_graph().draw_mermaid_png()
+
+
+# CORRER SISTEMA MULTI AGENTE
+
+def run_multi_agent_system(
+        query: str,
+        graph: CompiledStateGraph,
+        thread_id: str,
+        agent_teams: List[CompiledStateGraph],
+        agent_swarm_map: Dict[str, CompiledStateGraph]
+):
+    result= graph.invoke(
+        input= {"query": query}, 
+        config={
+            "configurable":{
+                "thread_id": thread_id,
+                "agent_teams": agent_teams,
+                "agent_swarm_map": agent_swarm_map,
+            }
+        }
+    )
+    return result
+
+result= run_multi_agent_system(
+    query= "Me han robado los datos de contacto y podría haber alguien haciéndose pasar por mí",
+    graph= fintech_graph,
+    thread_id= "1",
+    agent_teams= agent_teams,
+    agent_swarm_map= agent_swarm_map
+)
+
+
+
+test_cases = [
+    # (message, expected_team, expected_urgency)
+    ("How do I check my account balance?", "general_team", "normal"),
+    ("URGENT: My credit card was stolen!", "credit_card_team", "urgent"),
+    ("I can't access my account, this is critical", "account_team", "urgent"),
+    ("What are the current loan rates?", "loan_team", "normal"),
+    ("ASAP: Fraudulent charges on my card!", "credit_card_team", "urgent"),
+    ("How do I update my contact information?", "account_team", "normal"),
+    ("I need help with my loan application", "loan_team", "normal"),
+    ("What products do you offer?", "general_team", "normal"),
+]
+
+for i in range(len(test_cases)):
+    result= run_multi_agent_system(
+        query= test_cases[i][0],
+        graph= fintech_graph,
+        thread_id= f"{i}",
+        agent_teams= agent_teams,
+        agent_swarm_map= agent_swarm_map
+    )
+
+    for message in result["messages"]:
+        print(f"\n{'='*60}")
+        print(f"CLASIFICACIÓN: Urgencia={result['urgency']}, Topic={result['topic']}")
+        print(f"{'='*60}\n")
+        message.pretty_print()
