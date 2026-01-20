@@ -255,3 +255,6 @@ for user_message in user_messages:
             }
         }
     )
+
+for message in result["messages"]:
+    message.pretty_print()
